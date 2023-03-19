@@ -105,6 +105,13 @@ app.post('/api/chat/message', function (req, res) {
     DB.collection(COLLECTIONS.MESSAGES).insertOne(req.body).then(r => res.json(r));
 });
 
+app.get('/api/chat/message/:roomId', function (req, res) {
+    DB.collection(COLLECTIONS.MESSAGES).find({ roomId: req.params.roomId }).limit(20).sort({ $natural: -1 }).toArray().then(r => {
+        r.reverse();
+        res.json(r);
+    });
+});
+
 app.get('/api/user/:me', function (req, res) {
     DB.collection(COLLECTIONS.USERS).findOne({ username: req.params.me }).then(r => res.json({ valid: r !== null }));
 });
