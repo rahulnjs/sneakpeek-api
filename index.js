@@ -35,22 +35,23 @@ let DB;
 
 
 app.put('/api/me/:me', function (req, res) {
-    redis.set(req.params.me, JSON.stringify(req.body)).then(() => redis.expire(req.params.me, 3));
-    redis.set(req.body.id, req.params.me).then(() => redis.expire(req.body.id, 3));
+    redis.set(req.params.me, JSON.stringify(req.body)).then(() => redis.expire(req.params.me, 3)).catch(e => console.log(e));
+    redis.set(req.body.id, req.params.me).then(() => redis.expire(req.body.id, 3)).catch(e => console.log(e));
     res.json(req.body);
 });
 
 app.get('/api/you/:you', function (req, res) {
-    redis.get(req.params.you).then(d => res.json(JSON.parse(d)));
+    redis.get(req.params.you).then(d => res.json(JSON.parse(d))).catch(e => console.log(e));
 });
 
 app.get('/api/id/:id', function (req, res) {
-    redis.get(req.params.id).then(you => res.json({ you }));
+    redis.get(req.params.id).then(you => res.json({ you })).catch(e => console.log(e));
 });
 
 const COLLECTIONS = {
     ROOMS: 'room',
-    MESSAGES: 'message'
+    MESSAGES: 'message',
+    USERS: 'user'
 };
 
 app.post('/api/chat/room', function (req, res) {
@@ -102,6 +103,10 @@ app.get('/api/chat/room/:me', function (req, res) {
 
 app.post('/api/chat/message', function (req, res) {
     DB.collection(COLLECTIONS.MESSAGES).insertOne(req.body).then(r => res.json(r));
+});
+
+app.get('/api/user/:me', function (req, res) {
+    DB.collection(COLLECTIONS.USERS).findOne({ username: req.params.me }).then(r => res.json({ valid: r !== null }));
 });
 
 function getRoomQuery(p1, p2) {
