@@ -73,6 +73,10 @@ app.get('/api/shell/auth/:phrase', function (req, res) {
     });
 });
 
+app.get('/api/shell/auth/validate/:token', function (req, res) {
+    redis.get(req.params.token).then(v => res.json({ v })).catch(e => res.json({ e: 'e' }));
+});
+
 
 app.post('/api/chat/room', function (req, res) {
     const { p1, p2 } = req.body;
