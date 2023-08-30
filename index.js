@@ -7,7 +7,8 @@ const server = http.createServer(app);
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { createClient } = require('redis');
-const { MongoClient } = require("mongodb")
+const { MongoClient } = require("mongodb");
+const { v4: uuidv4 } = require('uuid');
 
 
 server.listen(3993, () => console.log("sneakpeek started at 3993"));
@@ -59,11 +60,18 @@ const COLLECTIONS = {
 app.get('/api/shell/auth/:phrase', function (req, res) {
     DB.collection(COLLECTIONS.SHELL).findOne({ type: 'phrase' }).then((shell) => {
         const { phrase } = req.params;
+        const auth = atob(phrase) === shell.phrase;
+        let token = undefined;
+        if (auth) {
+            token = btoa(uuidv4());
+            redis.set(token, token).then(() => redis.expire(token, 10)).catch(e => console.log(e));
+        }
         res.json({
-            auth: atob(phrase) === shell.phrase
+            auth,
+            token
         });
     });
-})
+});
 
 
 app.post('/api/chat/room', function (req, res) {
