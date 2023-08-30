@@ -7,7 +7,7 @@ const server = http.createServer(app);
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { createClient } = require('redis');
-const { MongoClient } = require("mongodb");
+const { MongoClient } = require("mongodb")
 
 
 server.listen(3993, () => console.log("sneakpeek started at 3993"));
@@ -48,11 +48,23 @@ app.get('/api/id/:id', function (req, res) {
     redis.get(req.params.id).then(you => res.json({ you })).catch(e => console.log(e));
 });
 
+
 const COLLECTIONS = {
     ROOMS: 'room',
     MESSAGES: 'message',
-    USERS: 'user'
+    USERS: 'user',
+    SHELL: 'shell'
 };
+
+app.get('/api/shell/auth/:phrase', function (req, res) {
+    DB.collection(COLLECTIONS.SHELL).findOne({ type: 'phrase' }).then((shell) => {
+        const { phrase } = req.params;
+        res.json({
+            auth: atob(phrase) === shell.phrase
+        });
+    });
+})
+
 
 app.post('/api/chat/room', function (req, res) {
     const { p1, p2 } = req.body;
