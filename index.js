@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const { createClient } = require('redis');
 const { MongoClient } = require("mongodb");
 const { v4: uuidv4 } = require('uuid');
-
+const fs = require('fs');
 
 server.listen(3993, () => console.log("sneakpeek started at 3993"));
 
@@ -155,3 +155,44 @@ function getRoomQuery(p1, p2) {
     };
 }
 
+
+
+
+
+
+/**
+ * Two ways 
+ * 
+ * 1. Query Param
+ * 2. Path Param
+ */
+
+
+
+
+
+app.get('/weather', function (req, res) {
+    const { state, city } = req.query;
+    const content = fs.readFileSync(`${state}/${city}`).toString();
+    //select temp from weather where state=state and city=city;
+    res.json({
+        "state": state,
+        "city": city,
+        "content": content
+    });
+});
+
+
+
+
+app.get('/weather/create', function (req, res) {
+    const { state, city, temp } = req.query;
+    //const content = fs.readFileSync(`${state}/${city}`).toString();
+    //select temp from weather where state=state and city=city;
+    fs.writeFileSync(`${state}/${city}`, temp,)
+    res.json({
+        "state": state,
+        "city": city,
+        "content": content
+    });
+});
