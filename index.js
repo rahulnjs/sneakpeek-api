@@ -171,7 +171,7 @@ function getRoomQuery(p1, p2) {
 
 
 
-app.get('/weather', function (req, res) {
+app.get('/api/weather', function (req, res) {
     const { state, city } = req.query;
     const content = fs.readFileSync(`${state}/${city}`).toString();
     //select temp from weather where state=state and city=city;
@@ -185,7 +185,7 @@ app.get('/weather', function (req, res) {
 
 
 
-app.get('/weather/create', function (req, res) {
+app.get('/api/weather/create', function (req, res) {
     const { state, city, temp } = req.query;
     //const content = fs.readFileSync(`${state}/${city}`).toString();
     //select temp from weather where state=state and city=city;
