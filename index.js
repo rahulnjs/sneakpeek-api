@@ -204,9 +204,9 @@ app.get('/api/deploy/ss/:branch', function (req, res) {
     const { branch } = req.params;
     execFile('/root/eureka/projects/deploy-ss.sh', [branch], (err, stdo, ste) => {
         if (err) {
-            res.send(e);
-        } else if (stde) {
-            res.send(stde);
+            res.send(err);
+        } else if (ste) {
+            res.send(ste);
         } else {
             res.send(stdo);
         }
