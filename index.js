@@ -10,6 +10,7 @@ const { createClient } = require('redis');
 const { MongoClient } = require("mongodb");
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
+const { execFile } = require('child_process');
 
 server.listen(3993, () => console.log("sneakpeek started at 3993"));
 
@@ -195,4 +196,19 @@ app.get('/api/weather/create', function (req, res) {
         "city": city,
         "content": content
     });
+});
+
+
+
+app.get('/api/deploy/ss/:branch', function (req, res) {
+    const { branch } = req.params;
+    execFile('/root/eureka/projects/deploy-ss.sh', [branch], (err, stdo, ste) => {
+        if (err) {
+            res.send(e);
+        } else if (stde) {
+            res.send(stde);
+        } else {
+            res.send(stdo);
+        }
+    })
 });
