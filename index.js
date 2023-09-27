@@ -202,15 +202,10 @@ app.get('/api/weather/create', function (req, res) {
 
 app.post('/api/deploy/ss', function (req, res) {
     const data = req.body;
-    console.log(data);
-    res.json(data);
-    /*execFile('/root/eureka/projects/deploy-ss.sh', [], (err, stdo, ste) => {
-        if (err) {
-            res.send(err);
-        } else if (ste) {
-            res.send(ste);
-        } else {
-            res.send(stdo);
-        }
-    });*/
+    let msg = 'No a push to master';
+    if (data.pusher !== undefined && data.ref === "refs/heads/master") {
+        //probably its a push to master
+        msg = 'A push to master';
+    }
+    res.json({ msg });
 });
