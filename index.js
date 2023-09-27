@@ -200,12 +200,12 @@ app.get('/api/weather/create', function (req, res) {
 
 
 
-app.post('/api/deploy/ss', function (req, res) {
+app.post('/api/deploy/:project', function (req, res) {
     const data = req.body;
     let msg = 'Not a push to master';
     if (data.pusher !== undefined && data.ref === "refs/heads/master") {
         msg = 'A push to master';
-        fs.writeFileSync(`/root/ss-redep.txt`, `${Date.now()}`, { encoding: "utf-8" })
+        fs.writeFileSync(`/root/${req.params.project}-redep.txt`, `${Date.now()}`, { encoding: "utf-8" })
     }
     res.json({ msg });
 });
