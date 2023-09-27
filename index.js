@@ -200,9 +200,11 @@ app.get('/api/weather/create', function (req, res) {
 
 
 
-app.get('/api/deploy/ss/:branch', function (req, res) {
-    const { branch } = req.params;
-    execFile('/root/eureka/projects/deploy-ss.sh', [branch], (err, stdo, ste) => {
+app.post('/api/deploy/ss', function (req, res) {
+    const data = req.body;
+    console.log(data);
+    res.json(data);
+    /*execFile('/root/eureka/projects/deploy-ss.sh', [], (err, stdo, ste) => {
         if (err) {
             res.send(err);
         } else if (ste) {
@@ -210,5 +212,5 @@ app.get('/api/deploy/ss/:branch', function (req, res) {
         } else {
             res.send(stdo);
         }
-    })
+    });*/
 });
